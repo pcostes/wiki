@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "fNlKQJ6xIX+5pAuwfRgeYp26MR0AVAzy74Q0oFkorfYhiOZNszxTPAlWHYP5hRuGtIUqX/SUCgotQr9FSuQPpg==",
+  "dgSpecHash": "yekla3m3E87j2PidxboGLgpRIrr5fs2XU1ACG/eU4LQERdWxIrPuzk4/hcYsLx6CvpMhvJvW+AqPAYa1gY2yig==",
   "success": true,
-  "projectFilePath": "C:\\Users\\pg150\\wiki\\Wiki\\Wiki\\Wiki.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\peter\\views\\hacktj\\wiki\\Wiki\\Wiki\\Wiki.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\peter\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
   "logs": []
 }
