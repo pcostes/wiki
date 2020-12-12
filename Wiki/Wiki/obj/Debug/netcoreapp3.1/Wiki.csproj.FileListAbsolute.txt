@@ -11,3 +11,5 @@ C:\Users\pg150\wiki\Wiki\Wiki\obj\Debug\netcoreapp3.1\Wiki.dll
 C:\Users\pg150\wiki\Wiki\Wiki\obj\Debug\netcoreapp3.1\Wiki.pdb
 C:\Users\pg150\wiki\Wiki\Wiki\obj\Debug\netcoreapp3.1\Wiki.genruntimeconfig.cache
 C:\Users\pg150\wiki\Wiki\Wiki\obj\Debug\netcoreapp3.1\Wiki.csprojAssemblyReference.cache
+C:\Users\pg150\wiki\Wiki\Wiki\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\pg150\wiki\Wiki\Wiki\obj\Debug\netcoreapp3.1\Wiki.csproj.CopyComplete
