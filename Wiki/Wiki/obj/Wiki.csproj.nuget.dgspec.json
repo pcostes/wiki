@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\pg150\\wiki\\Wiki\\Wiki\\Wiki.csproj": {}
+    "C:\\Users\\peter\\views\\hacktj\\wiki\\Wiki\\Wiki\\Wiki.csproj": {}
   },
   "projects": {
-    "C:\\Users\\pg150\\wiki\\Wiki\\Wiki\\Wiki.csproj": {
+    "C:\\Users\\peter\\views\\hacktj\\wiki\\Wiki\\Wiki\\Wiki.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\pg150\\wiki\\Wiki\\Wiki\\Wiki.csproj",
+        "projectUniqueName": "C:\\Users\\peter\\views\\hacktj\\wiki\\Wiki\\Wiki\\Wiki.csproj",
         "projectName": "Wiki",
-        "projectPath": "C:\\Users\\pg150\\wiki\\Wiki\\Wiki\\Wiki.csproj",
-        "packagesPath": "C:\\Users\\pg150\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\pg150\\wiki\\Wiki\\Wiki\\obj\\",
+        "projectPath": "C:\\Users\\peter\\views\\hacktj\\wiki\\Wiki\\Wiki\\Wiki.csproj",
+        "packagesPath": "C:\\Users\\peter\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\peter\\views\\hacktj\\wiki\\Wiki\\Wiki\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\pg150\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\peter\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

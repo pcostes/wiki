@@ -3,13 +3,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using System.Data;
-
 namespace C__Folder
 {
-    public class Links
-    {
-        public IList<string> links { get; set; }
+    public class Link
+	{
+        public int ns;
+        public string title;
     }
     class Program
     {
@@ -20,6 +19,7 @@ namespace C__Folder
             Console.WriteLine("done");
             Console.ReadKey();
         }
+
         async static Task<string[]> bfs(string root, string target)
         {
             return null;
@@ -44,11 +44,13 @@ namespace C__Folder
                         DataTable dt = JsonConvert.DeserializeObject<DataTable>(links);
                         //Console.WriteLine(allLinks.links);
                         Console.WriteLine(mycontent);
-                        foreach (DataRow row in dt.Rows)
-                        {
-                            Console.WriteLine(row["ns"] + " - " + row["title"]);
-                        }
-                        Console.WriteLine("done (inner)");
+                        string key = "\"links\":";
+                        int start_pos = mycontent.IndexOf(key) + key.Length;
+                        string links = mycontent.Substring(start_pos, mycontent.IndexOf("]") + 1 - start_pos);
+                        List<Link> generics = JsonConvert.DeserializeObject<List<Link>>(links);
+
+                        Console.WriteLine(generics);
+                        Console.WriteLine("done (ineer)");
                     }
                 }
             }
