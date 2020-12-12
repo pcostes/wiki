@@ -1,0 +1,13 @@
+C:\Users\pg150\wiki\Wiki\Wiki\obj\Debug\netcoreapp3.1\Wiki.AssemblyInfoInputs.cache
+C:\Users\pg150\wiki\Wiki\Wiki\obj\Debug\netcoreapp3.1\Wiki.AssemblyInfo.cs
+C:\Users\pg150\wiki\Wiki\Wiki\obj\Debug\netcoreapp3.1\Wiki.csproj.CoreCompileInputs.cache
+C:\Users\pg150\wiki\Wiki\Wiki\bin\Debug\netcoreapp3.1\Wiki.exe
+C:\Users\pg150\wiki\Wiki\Wiki\bin\Debug\netcoreapp3.1\Wiki.deps.json
+C:\Users\pg150\wiki\Wiki\Wiki\bin\Debug\netcoreapp3.1\Wiki.runtimeconfig.json
+C:\Users\pg150\wiki\Wiki\Wiki\bin\Debug\netcoreapp3.1\Wiki.runtimeconfig.dev.json
+C:\Users\pg150\wiki\Wiki\Wiki\bin\Debug\netcoreapp3.1\Wiki.dll
+C:\Users\pg150\wiki\Wiki\Wiki\bin\Debug\netcoreapp3.1\Wiki.pdb
+C:\Users\pg150\wiki\Wiki\Wiki\obj\Debug\netcoreapp3.1\Wiki.dll
+C:\Users\pg150\wiki\Wiki\Wiki\obj\Debug\netcoreapp3.1\Wiki.pdb
+C:\Users\pg150\wiki\Wiki\Wiki\obj\Debug\netcoreapp3.1\Wiki.genruntimeconfig.cache
+C:\Users\pg150\wiki\Wiki\Wiki\obj\Debug\netcoreapp3.1\Wiki.csprojAssemblyReference.cache
