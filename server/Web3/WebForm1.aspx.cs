@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -16,7 +17,17 @@ namespace Web3
 
 		protected void Submit_Click1(object sender, EventArgs e)
 		{
-			NameLabel.Text = EndPoint.Text + " - " + StartPoint.Text;
+			string[] result = Helper.dummyBFS(StartPoint.Text, EndPoint.Text);
+			NameLabel.Text = "Length: " + result.Length.ToString();
+			System.Data.DataTable data = new DataTable();
+			data.Columns.Add("Path");
+			foreach (var r in result)
+			{
+				data.Rows.Add(r);
+			}
+
+			PathList.DataSource = data;
+			PathList.DataBind();
 		}
 	}
 }

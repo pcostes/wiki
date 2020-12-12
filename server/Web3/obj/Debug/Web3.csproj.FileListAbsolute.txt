@@ -57,3 +57,5 @@ C:\Users\peter\views\hacktj\wiki\server\Web3\obj\Debug\Web3.csproj.CoreCompileIn
 C:\Users\peter\views\hacktj\wiki\server\Web3\obj\Debug\Web3.csproj.CopyComplete
 C:\Users\peter\views\hacktj\wiki\server\Web3\obj\Debug\Web3.dll
 C:\Users\peter\views\hacktj\wiki\server\Web3\obj\Debug\Web3.pdb
+C:\Users\peter\views\hacktj\wiki\server\Web3\bin\Newtonsoft.Json.dll
+C:\Users\peter\views\hacktj\wiki\server\Web3\bin\Newtonsoft.Json.xml
