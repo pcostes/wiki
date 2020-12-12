@@ -14,9 +14,14 @@ namespace C__Folder
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("requesting");
-            GetRequest("na");
-            Console.WriteLine("done");
+            Console.WriteLine("--requesting");
+            List<string> children = await GetChildren("Burt, County Donegal");
+            Console.WriteLine("--children:");
+            foreach (string s in children)
+			{
+                Console.WriteLine(s);
+			}
+            Console.WriteLine("--done");
             Console.ReadKey();
         }
 
@@ -24,29 +29,35 @@ namespace C__Folder
         {
             return null;
         }
-        async static void GetRequest(string url)
+        async static Task<List<string>> GetChildren(string title)
         {
+            List<string> children = new List<string>();
+
             using (HttpClient client = new HttpClient())
             {
-                //string full url = "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Craig%20Noone&format=json"
-                //string fullUrl = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=iwlinks&titles=Craig%20Noone";
-                string fullUrl = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=links&titles=Burt,%20County%20Donegal";
+                string fullUrl = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=links&titles=" + Uri.EscapeUriString(title);
                 using (HttpResponseMessage response = await client.GetAsync(fullUrl))
                 {
                     using (HttpContent content = response.Content)
                     {
                         string mycontent = await content.ReadAsStringAsync();
-                        Console.WriteLine(mycontent);
+
                         string key = "\"links\":";
                         int start_pos = mycontent.IndexOf(key) + key.Length;
-                        string links = mycontent.Substring(start_pos, mycontent.IndexOf("]") + 1 - start_pos);
-                        List<Link> generics = JsonConvert.DeserializeObject<List<Link>>(links);
+                        string link_str = mycontent.Substring(start_pos, mycontent.IndexOf("]") + 1 - start_pos);
+                        
+                        List<Link> link_list = JsonConvert.DeserializeObject<List<Link>>(link_str);
 
-                        Console.WriteLine(generics);
-                        Console.WriteLine("done (ineer)");
+                        foreach (Link l in link_list)
+						{
+                            children.Add(l.title);
+						}
+                        
                     }
                 }
             }
+
+            return children; 
         }
     }
 }
