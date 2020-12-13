@@ -12,29 +12,68 @@ namespace C__Folder
     }
     class Program
     {
+        static HttpClient client = new HttpClient();
         static async Task Main(string[] args)
         {
-            Console.WriteLine("--requesting");
+            Console.WriteLine("--requesting--");
             List<string> children = await GetChildren("Burt, County Donegal");
             Console.WriteLine("--children:");
             foreach (string s in children)
 			{
                 Console.WriteLine(s);
 			}
-            Console.WriteLine("--done");
+            Console.WriteLine("--bfs--");
+            List<string> path = await bfs("Burt, County Donegal", "Fahan");
+            string pathS = "";
+            foreach (string s in path)
+            {
+                pathS += s + "-";
+            }
+            Console.WriteLine(pathS.Substring(0, pathS.Length-1));
+            Console.WriteLine("--done--");
             Console.ReadKey();
         }
 
-        async static Task<string[]> bfs(string root, string target)
+        async static Task<List<String>> bfs(string root, string goal)
         {
-            return null;
+            Dictionary<string, string> visited = new Dictionary<string, string>();
+            visited.Add(root, "");
+            Queue<string> fringe = new Queue<string>();
+            fringe.Enqueue(root);
+            string pathFinder = root;
+            while (fringe.Count > 0)
+            {
+                string temp = fringe.Dequeue();
+                if (temp == goal)
+                {
+                    Console.WriteLine("broke (found path)");
+                    pathFinder = temp;
+                    break;
+                }
+                foreach (string child in await GetChildren(temp))
+                {
+                    if (!visited.ContainsKey(child))
+                    {
+                        visited.Add(child, temp);
+                        fringe.Enqueue(child);
+                    }
+
+                }
+            }
+            List<String> toret = new List<string>();
+            while(pathFinder != root)
+            {
+                toret.Add(pathFinder);
+                pathFinder = visited[pathFinder];
+            }
+            toret.Add(root);
+            toret.Reverse();
+            return toret ;
         }
         async static Task<List<string>> GetChildren(string title)
         {
             List<string> children = new List<string>();
 
-            using (HttpClient client = new HttpClient())
-            {
                 string fullUrl = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=links&titles=" + Uri.EscapeUriString(title);
                 using (HttpResponseMessage response = await client.GetAsync(fullUrl))
                 {
@@ -55,7 +94,6 @@ namespace C__Folder
                         
                     }
                 }
-            }
 
             return children; 
         }
