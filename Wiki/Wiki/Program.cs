@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Web;
 using Newtonsoft.Json;
 namespace C__Folder
 {
@@ -26,6 +27,8 @@ namespace C__Folder
 			{
                 Console.WriteLine(s);
 			}*/
+
+            
             Console.WriteLine("--bfs--");
             List<string> path = await bfs("Burt, County Donegal", "Crimean War");
             string pathS = "";
@@ -34,6 +37,7 @@ namespace C__Folder
                 pathS += s + "-";
             }
             Console.WriteLine(pathS.Substring(0, pathS.Length-1));
+            //List<string> children = await ParseProperty("David & Charles", "links");
             Console.WriteLine("--done--");
             Console.ReadKey();
         }
@@ -82,8 +86,8 @@ namespace C__Folder
                 throw new KeyNotFoundException(property);
 
             string prop_val = prop_dict[property];
-            string fullUrl = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=" + property + 
-                "&"+ prop_val + "limit=500&" + prop_val + "namespace=0&titles=" + Uri.EscapeUriString(title);
+            string fullUrl = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=" + property +
+                "&" + prop_val + "limit=500&" + prop_val + "namespace=0&titles=" + HttpUtility.UrlEncode(title); // encodes space as + sign. Watch out!
             using (HttpResponseMessage response = await client.GetAsync(fullUrl))
             {
                 using (HttpContent content = response.Content)
