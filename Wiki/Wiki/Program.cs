@@ -22,6 +22,7 @@ namespace C__Folder
 
         async static Task<string[]> bfs(string root, string target)
         {
+                
             return null;
         }
         async static void GetRequest(string url)
@@ -39,9 +40,8 @@ namespace C__Folder
                         //Console.WriteLine(mycontent.IndexOf("link"));
                         //Console.WriteLine(mycontent.IndexOf("]"));
                         //Console.WriteLine(mycontent.Length);
-                        string links = mycontent.Substring(mycontent.IndexOf("\"link"), mycontent.IndexOf("]")-mycontent.IndexOf("link")+2);
-                        Console.WriteLine(links);
-                        DataTable dt = JsonConvert.DeserializeObject<DataTable>(links);
+                        //string links = mycontent.Substring(mycontent.IndexOf("\"link"), mycontent.IndexOf("]")-mycontent.IndexOf("link")+2);
+                        //Console.WriteLine(links);
                         //Console.WriteLine(allLinks.links);
                         Console.WriteLine(mycontent);
                         string key = "\"links\":";
