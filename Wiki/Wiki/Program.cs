@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Web;
 using Newtonsoft.Json;
+using System.Collections.Concurrent;
+
 namespace C__Folder
 {
     public class Link
@@ -16,6 +19,7 @@ namespace C__Folder
     {
         private static Dictionary<string, string> prop_dict = new Dictionary<string, string>();
         private static HttpClient client = new HttpClient();
+        private static int num_tasks = 0;
         static async Task Main(string[] args)
         {
             prop_dict.Add("linkshere", "lh");
@@ -44,31 +48,29 @@ namespace C__Folder
 
         async static Task<List<String>> bfs(string root, string goal)
         {
-            Dictionary<string, string> visited = new Dictionary<string, string>();
-            visited.Add(root, "");
-            Queue<string> fringe = new Queue<string>();
+            ConcurrentDictionary<string, string> visited = new ConcurrentDictionary<string, string>();
+            visited.GetOrAdd(root, "");
+            ConcurrentQueue<string> fringe = new ConcurrentQueue<string>();
             fringe.Enqueue(root);
-            string pathFinder = root;
-            while (fringe.Count > 0)
-            {
-                string temp = fringe.Dequeue();
 
-                Console.WriteLine(temp);
+            string pathFinder = root;
+            while (true)
+            {
+                if (fringe.Count == 0)
+                    continue;
+                string temp = "";
+                bool deq_res = fringe.TryDequeue(out temp);
+
+                //Console.WriteLine(temp);
                 if (temp == goal)
                 {
                     Console.WriteLine("broke (found path)");
                     pathFinder = temp;
                     break;
                 }
-                foreach (string child in await ParseProperty(temp, "links"))
-                {
-                    if (!visited.ContainsKey(child))
-                    {
-                        visited.Add(child, temp);
-                        fringe.Enqueue(child);
-                    }
 
-                }
+                var res = AppendChildren(temp, fringe, visited);
+                //Console.WriteLine("ending");
             }
             List<String> toret = new List<string>();
             while(pathFinder != root)
@@ -79,6 +81,22 @@ namespace C__Folder
             toret.Add(root);
             toret.Reverse();
             return toret ;
+        }
+
+        async static Task AppendChildren(string title, ConcurrentQueue<string> fringe, ConcurrentDictionary<string, string> visited)
+		{
+            num_tasks++;
+            //Thread.Sleep(2000);
+            foreach (string child in await ParseProperty(title, "links"))
+            {
+                if (!visited.ContainsKey(child))
+                {
+                    visited.GetOrAdd(child, title);
+                    fringe.Enqueue(child);
+                }
+            }
+            //Console.WriteLine("{0}", num_tasks);
+            num_tasks--;
         }
         async static Task<string> MakeRequest(string title, string property)
 		{
