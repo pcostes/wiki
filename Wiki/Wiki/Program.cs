@@ -19,7 +19,8 @@ namespace C__Folder
     {
         private static Dictionary<string, string> prop_dict = new Dictionary<string, string>();
         private static HttpClient client = new HttpClient();
-        private static int num_tasks = 0;
+        private static int current_tasks = 0;
+        private static int total_tasks = 0;
         static async Task Main(string[] args)
         {
             prop_dict.Add("linkshere", "lh");
@@ -35,39 +36,81 @@ namespace C__Folder
             
             Console.WriteLine("--bfs--");
             long unixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            List<string> path = await bfs("Burt, County Donegal", "Carlingford Lough");
+            List<string> path = await BIDIRECTIONALbfs("Interstate 422", "Lalinovac");
+            //List<string> path = await BIDIRECTIONALbfs("Peanut butter", "Iambic pentameter");
             Console.WriteLine(String.Format("finished in {0} seconds", (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - unixTime) / 1000));
             string pathS = "";
             foreach (string s in path)
             {
-                pathS += s + "-";
+                pathS += s + "\t\t";
             }
-            Console.WriteLine(pathS.Substring(0, pathS.Length-1));
+            Console.WriteLine(pathS.Substring(0, pathS.Length-2));
             //List<string> children = await ParseProperty("David & Charles", "links");
+            Console.WriteLine("{0} tasks", total_tasks);
             Console.WriteLine("--done--");
             Console.ReadKey();
         }
-
         async static Task<List<String>> BIDIRECTIONALbfs(string root, string goal)
         {
             ConcurrentDictionary<string, string> visited1 = new ConcurrentDictionary<string, string>();
             visited1.GetOrAdd(root, "");
-            ConcurrentDictionary<string, string> buriedNodes1 = new ConcurrentDictionary<string, string>(visited1);
             ConcurrentQueue<string> fringe1 = new ConcurrentQueue<string>();
+            ConcurrentQueue<string> outerqueue = new ConcurrentQueue<string>();
             fringe1.Enqueue(root);
-            fringe1.Enqueue("\t0");
             ConcurrentDictionary<string, string> visited2 = new ConcurrentDictionary<string, string>();
             visited2.GetOrAdd(goal, "");
-            ConcurrentDictionary<string, string> buriedNodes2 = new ConcurrentDictionary<string, string>(visited2);
             ConcurrentQueue<string> fringe2 = new ConcurrentQueue<string>();
             fringe2.Enqueue(goal);
-            fringe2.Enqueue("\t0");
             string pathFinder = "";
-            string viablePath = "";
-            while (fringe1.Count > 0 && fringe2.Count > 0)
+            //string viablePath = "";
+            while (true)
             {
-                if (fringe1.Count == 0 || fringe2.Count == 0)
-                    continue;
+                List<Task> tasks = new List<Task>();
+                while (fringe1.Count > 0)
+                {
+                    string temp1 = "";
+                    fringe1.TryDequeue(out temp1);
+                    tasks.Add(AppendChildren(temp1, outerqueue, visited1, "links"));
+                }
+                await Task.WhenAll(tasks);
+                Console.WriteLine(total_tasks.ToString());
+                bool flag = false;
+                while(outerqueue.Count>0)
+                {
+                    string item = "";
+                    outerqueue.TryDequeue(out item);
+                    if(visited2.ContainsKey(item))
+                    {
+                        pathFinder = item;
+                        flag = true;
+                    }
+                    fringe1.Enqueue(item);
+                }
+                if (flag)
+                    break;
+                tasks = new List<Task>();
+                while (fringe2.Count > 0)
+                {
+                    string temp2 = "";
+                    fringe2.TryDequeue(out temp2);
+                    tasks.Add(AppendChildren(temp2, outerqueue, visited2, "linkshere"));
+                }
+                await Task.WhenAll(tasks);
+                Console.WriteLine(total_tasks.ToString());
+                while (outerqueue.Count > 0)
+                {
+                    string item = "";
+                    outerqueue.TryDequeue(out item);
+                    if (visited1.ContainsKey(item))
+                    {
+                        pathFinder = item;
+                        flag = true;
+                    }
+                    fringe2.Enqueue(item);
+                }
+                if (flag)
+                    break;
+                /*
                 string peek1 = "";
                 string peek2 = "";
                 fringe1.TryPeek(out peek1);
@@ -78,12 +121,12 @@ namespace C__Folder
                     string depth2 = "";
                     fringe1.TryDequeue(out depth1);
                     fringe2.TryDequeue(out depth2);
-                    Console.WriteLine(String.Format("queue1={0} queue2={1}", depth1, depth2));
+                    //Console.WriteLine(String.Format("queue1={0} queue2={1}", depth1, depth2));
                     fringe1.Enqueue("\t" + (int.Parse(depth1.Substring(1)) + 1).ToString());
                     fringe2.Enqueue("\t" + (int.Parse(depth2.Substring(1)) + 1).ToString());
                     buriedNodes1 = new ConcurrentDictionary<string, string>(visited1);
                     buriedNodes2 = new ConcurrentDictionary<string, string>(visited2);
-                    Console.WriteLine(String.Format("queue1={0} queue2={1}", depth1, depth2));
+                    //Console.WriteLine(String.Format("queue1={0} queue2={1}", depth1, depth2));
                     if(viablePath != "")
                     {
                         Console.WriteLine("broke using viable path");
@@ -124,7 +167,7 @@ namespace C__Folder
                     }
                     AppendChildren(temp2, fringe2, visited2, "linkshere");
                 }
-                //Console.WriteLine(temp
+                //Console.WriteLine(temp*/
             }
             string tempfinder = pathFinder;
             List<String> ret = new List<string>();
@@ -181,7 +224,11 @@ namespace C__Folder
 
         async static Task AppendChildren(string title, ConcurrentQueue<string> fringe, ConcurrentDictionary<string, string> visited, string prop)
 		{
-            num_tasks++;
+            while(current_tasks > 1000)
+            {
+            }
+            current_tasks++;
+            total_tasks++;
             //Thread.Sleep(2000);
             foreach (string child in await ParseProperty(title, prop))
             {
@@ -191,8 +238,8 @@ namespace C__Folder
                     fringe.Enqueue(child);
                 }
             }
-            Console.WriteLine("{0}", num_tasks);
-            num_tasks--;
+            //Console.WriteLine("{0}", num_tasks);
+            current_tasks--;
         }
         async static Task<string> MakeRequest(string title, string property)
 		{
@@ -201,7 +248,7 @@ namespace C__Folder
 
             string prop_val = prop_dict[property];
             string fullUrl = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=" + property +
-                "&" + prop_val + "limit=80&" + prop_val + "namespace=0&titles=" + HttpUtility.UrlEncode(title); // encodes space as + sign. Watch out!
+                "&" + prop_val + "limit=500&" + prop_val + "namespace=0&titles=" + HttpUtility.UrlEncode(title); // encodes space as + sign. Watch out!
             using (HttpResponseMessage response = await client.GetAsync(fullUrl))
             {
                 using (HttpContent content = response.Content)
@@ -218,7 +265,7 @@ namespace C__Folder
 
             string prop_val = prop_dict[property];
             string fullUrl = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=" + property +
-                "&" + prop_val + "limit=80&" + prop_val + "continue=" + contVal + "&" + prop_val + "namespace=0&titles=" + HttpUtility.UrlEncode(title); // encodes space as + sign. Watch out!
+                "&" + prop_val + "limit=500&" + prop_val + "continue=" + contVal + "&" + prop_val + "namespace=0&titles=" + HttpUtility.UrlEncode(title); // encodes space as + sign. Watch out!
             using (HttpResponseMessage response = await client.GetAsync(fullUrl))
             {
                 using (HttpContent content = response.Content)
@@ -237,7 +284,7 @@ namespace C__Folder
             if (!mycontent.Contains(key))
                 return children;
             int start_pos = mycontent.IndexOf(key) + key.Length;
-            string link_str = mycontent.Substring(start_pos, mycontent.IndexOf("]") + 1 - start_pos);
+            string link_str = mycontent.Substring(start_pos, mycontent.IndexOf("]", start_pos) + 1 - start_pos);
 
             List<Link> link_list = JsonConvert.DeserializeObject<List<Link>>(link_str);
 
