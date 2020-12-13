@@ -34,7 +34,7 @@ namespace C__Folder
 
             
             Console.WriteLine("--bfs--");
-            List<string> path = await bfs("Burt, County Donegal", "Crimean War");
+            List<string> path = await BIDIRECTIONALbfs("Burt, County Donegal", "Carlingford Lough");
             string pathS = "";
             foreach (string s in path)
             {
@@ -44,6 +44,103 @@ namespace C__Folder
             //List<string> children = await ParseProperty("David & Charles", "links");
             Console.WriteLine("--done--");
             Console.ReadKey();
+        }
+
+        async static Task<List<String>> BIDIRECTIONALbfs(string root, string goal)
+        {
+            Dictionary<string, string> visited1 = new Dictionary<string, string>();
+            visited1.Add(root, "");
+            Dictionary<string, string> buriedNodes1 = new Dictionary<string, string>(visited1);
+            Queue<string> fringe1 = new Queue<string>();
+            fringe1.Enqueue(root);
+            fringe1.Enqueue("\t0");
+            Dictionary<string, string> visited2 = new Dictionary<string, string>();
+            visited2.Add(goal, "");
+            Dictionary<string, string> buriedNodes2 = new Dictionary<string, string>(visited2);
+            Queue<string> fringe2 = new Queue<string>();
+            fringe2.Enqueue(goal);
+            fringe2.Enqueue("\t0");
+            string pathFinder = "";
+            string viablePath = "";
+            while (fringe1.Count > 0 && fringe2.Count > 0)
+            {
+                if(fringe1.Peek().Substring(0,1) == "\t" && fringe2.Peek().Substring(0,1) == "\t")
+                {
+                    string depth1 = fringe1.Dequeue();
+                    string depth2 = fringe2.Dequeue();
+                    fringe1.Enqueue("\t" + (int.Parse(depth1.Substring(1))+1).ToString());
+                    fringe2.Enqueue("\t" + (int.Parse(depth2.Substring(1)) + 1).ToString());
+                    buriedNodes1 = new Dictionary<string, string>(visited1);
+                    buriedNodes2 = new Dictionary<string, string>(visited2);
+                    Console.WriteLine(String.Format("queue1={0} queue2={1}", depth1, depth2));
+                    if(viablePath != "")
+                    {
+                        Console.WriteLine("broke using viable path");
+                        pathFinder = viablePath;
+                        break;
+                    }
+                }
+                if (fringe1.Peek().Substring(0, 1) != "\t") // do not progress this tree if it is deeper than the other
+                {
+                    string temp1 = fringe1.Dequeue();
+                    if (buriedNodes2.ContainsKey(temp1))
+                    {
+                        Console.WriteLine("broke (found path)");
+                        pathFinder = temp1;
+                        break;
+                    }
+                    if (visited2.ContainsKey(temp1))
+                    {
+                        viablePath = temp1;
+                    }
+                    foreach (string child in await ParseProperty(temp1, "links"))
+                    {
+                        if (!visited1.ContainsKey(child))
+                        {
+                            visited1.Add(child, temp1);
+                            fringe1.Enqueue(child);
+                        }
+                    }
+                }
+                if (fringe2.Peek().Substring(0, 1) != "\t") // do not progress this tree if it is deeper than the other
+                {
+                    string temp2 = fringe2.Dequeue();
+                    if (buriedNodes1.ContainsKey(temp2))
+                    {
+                        Console.WriteLine("broke (found path)");
+                        pathFinder = temp2;
+                        break;
+                    }
+                    if (visited1.ContainsKey(temp2))
+                    {
+                        viablePath = temp2;
+                    }
+                    foreach (string child in await ParseProperty(temp2, "linkshere"))
+                    {
+                        if (!visited2.ContainsKey(child))
+                        {
+                            visited2.Add(child, temp2);
+
+                            fringe2.Enqueue(child);
+                        }
+                    }
+                }
+                //Console.WriteLine(temp
+            }
+            string tempfinder = pathFinder;
+            List<String> ret = new List<string>();
+            while (tempfinder != "")
+            {
+                ret.Insert(0, tempfinder);
+                tempfinder = visited1[tempfinder];
+            }
+            tempfinder = visited2[pathFinder];
+            while (tempfinder != "")
+            {
+                ret.Add(tempfinder);
+                tempfinder = visited2[tempfinder];
+            }
+            return ret;
         }
 
         async static Task<List<String>> bfs(string root, string goal)
