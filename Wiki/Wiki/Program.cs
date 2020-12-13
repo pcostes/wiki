@@ -111,7 +111,7 @@ namespace C__Folder
                     {
                         viablePath = temp2;
                     }
-                    foreach (string child in await ParseProperty(temp2, "links"))
+                    foreach (string child in await ParseProperty(temp2, "linkshere"))
                     {
                         if (!visited2.ContainsKey(child))
                         {
